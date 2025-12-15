@@ -1,0 +1,34 @@
+// lint-all: Runs all quality checks.
+package main
+
+import (
+	"fmt"
+	"os"
+	"os/exec"
+)
+
+var checks = []string{
+	"./tools/cmd/check-limits",
+	"./tools/cmd/check-density",
+	"./tools/cmd/check-arch",
+	"./tools/cmd/check-sqlc",
+}
+
+func main() {
+	failed := false
+
+	for _, check := range checks {
+		fmt.Printf("Running %s...\n", check)
+		cmd := exec.Command("go", "run", check)
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		if err := cmd.Run(); err != nil {
+			failed = true
+		}
+	}
+
+	if failed {
+		os.Exit(1)
+	}
+	fmt.Println("✓ All checks passed")
+}

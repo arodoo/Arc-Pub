@@ -1,0 +1,90 @@
+version: '3'
+
+vars:
+  GODOT_ROOT: ..
+
+tasks:
+  # Code quality checks
+  check:limits:
+    desc: Check file/line length (120L/120char)
+    cmd: go run ./tools/cmd/check-limits
+
+  check:i18n:
+    desc: Check for hardcoded strings in GDScript
+    dir: "{{.GODOT_ROOT}}"
+    cmd: go run ../server/tools/cmd/check-i18n
+
+  check:visuals:
+    desc: Check for hardcoded colors
+    dir: "{{.GODOT_ROOT}}"
+    cmd: go run ../server/tools/cmd/check-visuals
+
+  check:headers:
+    desc: Check for license headers
+    cmd: go run ./tools/cmd/check-headers
+
+  check:density:
+    desc: Check folder file density
+    cmd: go run ./tools/cmd/check-density
+
+  check:sqlc:
+    desc: Verify sqlc generated code is fresh
+    cmd: go run ./tools/cmd/check-sqlc
+
+  check:arch:
+    desc: Check layer import restrictions
+    cmd: go run ./tools/cmd/check-arch
+
+  check:assets:
+    desc: Check asset file sizes
+    cmd: go run ./tools/cmd/check-assets -root={{.GODOT_ROOT}}
+
+  check:scenes:
+    desc: Check .tscn external resources
+    cmd: go run ./tools/cmd/check-scenes -root={{.GODOT_ROOT}}
+
+  check:orphans:
+    desc: Find unreferenced files
+    cmd: go run ./tools/cmd/check-orphans -root={{.GODOT_ROOT}}
+
+  # Linters
+  lint:go:
+    desc: Run golangci-lint
+    cmd: golangci-lint run ./...
+
+  lint:godot:
+    desc: Run gdlint (requires gdlint installed)
+    dir: "{{.GODOT_ROOT}}"
+    cmd: gdlint .
+
+  # Combined tasks
+  check:all:
+    desc: Run all checks
+    deps:
+      - check:limits
+      - check:density
+      - check:arch
+      - check:sqlc
+
+  check:godot:
+    desc: Run Godot-specific checks
+    deps:
+      - check:i18n
+      - check:visuals
+      - check:assets
+      - check:scenes
+
+  lint:all:
+    desc: Run all linters
+    deps:
+      - lint:go
+
+  # SQLC
+  sqlc:generate:
+    desc: Generate sqlc code
+    cmd: sqlc generate
+
+  # Development
+  dev:
+    desc: Run server in development mode
+    cmd: go run ./cmd/api

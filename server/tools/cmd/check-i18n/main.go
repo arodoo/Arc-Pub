@@ -1,0 +1,29 @@
+// check-i18n: Enforces tr() usage for strings.
+package main
+
+import (
+	"os"
+
+	"github.com/arc-pub/server/tools/checkers"
+	"github.com/arc-pub/server/tools/reporters"
+	"github.com/arc-pub/server/tools/scanners"
+)
+
+func main() {
+	scanner := scanners.NewFileScanner()
+	files, err := scanner.Scan(".", []string{".gd"})
+	if err != nil {
+		os.Stderr.WriteString("scan error: " + err.Error() + "\n")
+		os.Exit(1)
+	}
+
+	checker := checkers.NewI18n()
+	violations := checker.Check(files)
+
+	reporter := reporters.NewConsole()
+	reporter.Report(os.Stdout, violations)
+
+	if len(violations) > 0 {
+		os.Exit(1)
+	}
+}
