@@ -5,13 +5,68 @@
 package sqlc
 
 import (
+	"database/sql/driver"
+	"fmt"
+
 	"github.com/jackc/pgx/v5/pgtype"
 )
+
+type FactionType string
+
+const (
+	FactionTypeRed   FactionType = "red"
+	FactionTypeBlue  FactionType = "blue"
+	FactionTypeGreen FactionType = "green"
+)
+
+func (e *FactionType) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = FactionType(s)
+	case string:
+		*e = FactionType(s)
+	default:
+		return fmt.Errorf("unsupported scan type for FactionType: %T", src)
+	}
+	return nil
+}
+
+type NullFactionType struct {
+	FactionType FactionType `json:"faction_type"`
+	Valid       bool        `json:"valid"` // Valid is true if FactionType is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullFactionType) Scan(value interface{}) error {
+	if value == nil {
+		ns.FactionType, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.FactionType.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullFactionType) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.FactionType), nil
+}
+
+type Ship struct {
+	ID        pgtype.UUID        `json:"id"`
+	UserID    pgtype.UUID        `json:"user_id"`
+	ShipType  string             `json:"ship_type"`
+	Slot      int32              `json:"slot"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+}
 
 type User struct {
 	ID             pgtype.UUID        `json:"id"`
 	Email          string             `json:"email"`
 	HashedPassword string             `json:"hashed_password"`
 	Role           string             `json:"role"`
+	Faction        NullFactionType    `json:"faction"`
 	CreatedAt      pgtype.Timestamptz `json:"created_at"`
 }

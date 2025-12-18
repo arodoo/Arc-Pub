@@ -1,8 +1,8 @@
 # File: login.gd
 # Purpose: Controller script for login scene UI. Handles user input from
 # email and password fields, validates non-empty input, triggers API login
-# request, and displays success/error feedback. Connects to API signals for
-# async response handling. Entry point for user authentication flow.
+# request, and routes to faction_select or lobby based on profile. Connects
+# to API signals for async response handling. Entry point for authentication.
 # Path: client/scripts/login/login.gd
 # All Rights Reserved. Arc-Pub.
 
@@ -18,6 +18,8 @@ func _ready() -> void:
 	login_button.pressed.connect(_on_login_pressed)
 	API.login_success.connect(_on_login_success)
 	API.login_failed.connect(_on_login_failed)
+	API.profile_loaded.connect(_on_profile_loaded)
+	API.profile_failed.connect(_on_profile_failed)
 	
 	# Dev defaults
 	email_input.text = "admin@dev.local"
@@ -38,12 +40,37 @@ func _on_login_pressed() -> void:
 
 
 func _on_login_success(tokens: Dictionary) -> void:
-	status_label.text = "Login successful!"
-	login_button.disabled = false
-	print("Access Token: ", tokens.get("access_token", ""))
-	print("Expires in: ", tokens.get("expires_in", 0), " seconds")
+	status_label.text = "Loading profile..."
+	API.set_user_id(_get_user_id_from_token(tokens.get("access_token", "")))
+	API.get_profile()
 
 
 func _on_login_failed(error: String) -> void:
 	status_label.text = "Error: " + error
 	login_button.disabled = false
+
+
+func _on_profile_loaded(profile: Dictionary) -> void:
+	var faction: Variant = profile.get("faction")
+	if faction == null or faction == "":
+		get_tree().change_scene_to_file("res://scenes/faction_select/faction_select.tscn")
+	else:
+		get_tree().change_scene_to_file("res://scenes/lobby/lobby.tscn")
+
+
+func _on_profile_failed(_error: String) -> void:
+	get_tree().change_scene_to_file("res://scenes/faction_select/faction_select.tscn")
+
+
+func _get_user_id_from_token(token: String) -> String:
+	var parts: PackedStringArray = token.split(".")
+	if parts.size() < 2:
+		return ""
+	var payload: String = parts[1]
+	while payload.length() % 4 != 0:
+		payload += "="
+	var decoded: PackedByteArray = Marshalls.base64_to_raw(payload)
+	var json: Variant = JSON.parse_string(decoded.get_string_from_utf8())
+	if json is Dictionary:
+		return json.get("sub", "")
+	return ""

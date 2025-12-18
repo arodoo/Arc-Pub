@@ -11,6 +11,39 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const countUserShips = `-- name: CountUserShips :one
+SELECT COUNT(*) FROM ships WHERE user_id = $1
+`
+
+func (q *Queries) CountUserShips(ctx context.Context, userID pgtype.UUID) (int64, error) {
+	row := q.db.QueryRow(ctx, countUserShips, userID)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const createShip = `-- name: CreateShip :exec
+INSERT INTO ships (id, user_id, ship_type, slot)
+VALUES ($1, $2, $3, $4)
+`
+
+type CreateShipParams struct {
+	ID       pgtype.UUID `json:"id"`
+	UserID   pgtype.UUID `json:"user_id"`
+	ShipType string      `json:"ship_type"`
+	Slot     int32       `json:"slot"`
+}
+
+func (q *Queries) CreateShip(ctx context.Context, arg CreateShipParams) error {
+	_, err := q.db.Exec(ctx, createShip,
+		arg.ID,
+		arg.UserID,
+		arg.ShipType,
+		arg.Slot,
+	)
+	return err
+}
+
 const createUser = `-- name: CreateUser :exec
 INSERT INTO users (id, email, hashed_password, role)
 VALUES ($1, $2, $3, $4)
@@ -45,16 +78,17 @@ func (q *Queries) ExistsUserByEmail(ctx context.Context, email string) (bool, er
 }
 
 const findUserByEmail = `-- name: FindUserByEmail :one
-SELECT id, email, hashed_password, role
+SELECT id, email, hashed_password, role, faction
 FROM users
 WHERE email = $1
 `
 
 type FindUserByEmailRow struct {
-	ID             pgtype.UUID `json:"id"`
-	Email          string      `json:"email"`
-	HashedPassword string      `json:"hashed_password"`
-	Role           string      `json:"role"`
+	ID             pgtype.UUID     `json:"id"`
+	Email          string          `json:"email"`
+	HashedPassword string          `json:"hashed_password"`
+	Role           string          `json:"role"`
+	Faction        NullFactionType `json:"faction"`
 }
 
 func (q *Queries) FindUserByEmail(ctx context.Context, email string) (FindUserByEmailRow, error) {
@@ -65,6 +99,85 @@ func (q *Queries) FindUserByEmail(ctx context.Context, email string) (FindUserBy
 		&i.Email,
 		&i.HashedPassword,
 		&i.Role,
+		&i.Faction,
 	)
 	return i, err
+}
+
+const getUserProfile = `-- name: GetUserProfile :one
+SELECT id, email, role, faction
+FROM users
+WHERE id = $1
+`
+
+type GetUserProfileRow struct {
+	ID      pgtype.UUID     `json:"id"`
+	Email   string          `json:"email"`
+	Role    string          `json:"role"`
+	Faction NullFactionType `json:"faction"`
+}
+
+func (q *Queries) GetUserProfile(ctx context.Context, id pgtype.UUID) (GetUserProfileRow, error) {
+	row := q.db.QueryRow(ctx, getUserProfile, id)
+	var i GetUserProfileRow
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.Role,
+		&i.Faction,
+	)
+	return i, err
+}
+
+const getUserShips = `-- name: GetUserShips :many
+SELECT id, ship_type, slot, created_at
+FROM ships
+WHERE user_id = $1
+ORDER BY slot
+`
+
+type GetUserShipsRow struct {
+	ID        pgtype.UUID        `json:"id"`
+	ShipType  string             `json:"ship_type"`
+	Slot      int32              `json:"slot"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+}
+
+func (q *Queries) GetUserShips(ctx context.Context, userID pgtype.UUID) ([]GetUserShipsRow, error) {
+	rows, err := q.db.Query(ctx, getUserShips, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetUserShipsRow{}
+	for rows.Next() {
+		var i GetUserShipsRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.ShipType,
+			&i.Slot,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const setUserFaction = `-- name: SetUserFaction :exec
+UPDATE users SET faction = $1 WHERE id = $2 AND faction IS NULL
+`
+
+type SetUserFactionParams struct {
+	Faction NullFactionType `json:"faction"`
+	ID      pgtype.UUID     `json:"id"`
+}
+
+func (q *Queries) SetUserFaction(ctx context.Context, arg SetUserFactionParams) error {
+	_, err := q.db.Exec(ctx, setUserFaction, arg.Faction, arg.ID)
+	return err
 }

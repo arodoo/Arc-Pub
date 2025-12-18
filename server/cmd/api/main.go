@@ -2,7 +2,7 @@
 // Purpose: Entry point for the Arc-Pub API server. Initializes configuration,
 // establishes PostgreSQL database connection, runs automatic migrations on
 // startup (Hibernate-style), seeds admin user for development, configures
-// authentication use cases, and starts the HTTP server with Chi router.
+// authentication and user use cases, and starts the HTTP server with Chi.
 // Path: server/cmd/api/main.go
 // All Rights Reserved. Arc-Pub.
 
@@ -13,11 +13,13 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/arc-pub/server/internal/application/auth"
+	authApp "github.com/arc-pub/server/internal/application/auth"
+	userApp "github.com/arc-pub/server/internal/application/user"
 	"github.com/arc-pub/server/internal/config"
 	"github.com/arc-pub/server/internal/infra/crypto"
 	httpPkg "github.com/arc-pub/server/internal/infra/http"
 	authHandler "github.com/arc-pub/server/internal/infra/http/auth"
+	userHandler "github.com/arc-pub/server/internal/infra/http/user"
 	"github.com/arc-pub/server/internal/infra/postgres"
 	"github.com/arc-pub/server/internal/infra/postgres/migrate"
 	"github.com/arc-pub/server/internal/infra/token"
@@ -47,18 +49,29 @@ func main() {
 		log.Fatalf("failed to run migrations: %v", err)
 	}
 
+	// Repos
 	hasher := crypto.NewBcryptHasher()
 	userRepo := postgres.NewUserRepo(pool)
+	profileRepo := postgres.NewProfileRepo(pool)
+	shipRepo := postgres.NewShipRepo(pool)
 	jwtSvc := token.NewJWTService(cfg.JWTSecret)
 
+	// Seeder
 	seeder := postgres.NewSeeder(userRepo, hasher)
 	if err := seeder.SeedAdmin(ctx); err != nil {
 		log.Fatalf("failed to seed admin: %v", err)
 	}
 
-	loginUC := auth.NewLoginUseCase(userRepo, jwtSvc, hasher)
-	handler := authHandler.NewHandler(loginUC)
-	router := httpPkg.NewRouter(handler)
+	// Use Cases
+	loginUC := authApp.NewLoginUseCase(userRepo, jwtSvc, hasher)
+	profileUC := userApp.NewProfileUseCase(profileRepo, shipRepo)
+	factionUC := userApp.NewFactionUseCase(profileRepo, shipRepo)
+
+	// Handlers
+	authH := authHandler.NewHandler(loginUC)
+	userH := userHandler.NewHandler(profileUC, factionUC)
+
+	router := httpPkg.NewRouter(authH, userH)
 
 	addr := ":" + cfg.Port
 	log.Printf("Server starting on %s", addr)

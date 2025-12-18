@@ -1,19 +1,10 @@
--- Database schema for Arc-Pub
--- This file is the source of truth for sqlc code generation
-
+-- Add faction type enum
 CREATE TYPE faction_type AS ENUM ('red', 'blue', 'green');
 
-CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    email VARCHAR(255) UNIQUE NOT NULL,
-    hashed_password TEXT NOT NULL,
-    role VARCHAR(50) NOT NULL DEFAULT 'user',
-    faction faction_type,
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
+-- Add faction column to users
+ALTER TABLE users ADD COLUMN faction faction_type;
 
-CREATE INDEX idx_users_email ON users(email);
-
+-- Ships table
 CREATE TABLE ships (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
