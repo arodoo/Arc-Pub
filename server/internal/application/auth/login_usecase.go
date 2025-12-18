@@ -1,3 +1,6 @@
+// Arc-Pub - Metaverso 2D MMO Social
+// Copyright (c) 2024. MIT License.
+
 package auth
 
 import (
@@ -41,7 +44,8 @@ func (uc *LoginUseCase) Execute(
 		return nil, domainAuth.ErrInvalidCredentials
 	}
 
-	if err := uc.hasher.Compare(usr.HashedPassword, creds.Password); err != nil {
+	err = uc.hasher.Compare(usr.HashedPassword, creds.Password)
+	if err != nil {
 		return nil, domainAuth.ErrInvalidCredentials
 	}
 

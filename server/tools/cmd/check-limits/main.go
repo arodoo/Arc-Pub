@@ -1,3 +1,6 @@
+// Arc-Pub - Metaverso 2D MMO Social
+// Copyright (c) 2024. MIT License.
+
 // check-limits: Enforces 120L/120char rule.
 package main
 

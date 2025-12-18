@@ -1,3 +1,6 @@
+// Arc-Pub - Metaverso 2D MMO Social
+// Copyright (c) 2024. MIT License.
+
 // check-sqlc: Verifies sqlc generated code is fresh.
 package main
 

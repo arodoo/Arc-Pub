@@ -1,4 +1,6 @@
-// Package main is the API server entry point.
+// Arc-Pub - Metaverso 2D MMO Social
+// Copyright (c) 2024. MIT License.
+
 package main
 
 import (

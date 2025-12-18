@@ -1,3 +1,6 @@
+// Arc-Pub - Metaverso 2D MMO Social
+// Copyright (c) 2024. MIT License.
+
 package checkers
 
 import (
@@ -31,7 +34,6 @@ func (c *Orphans) Check(files []core.File) []core.Violation {
 	referenced := make(map[string]bool)
 	var candidates []string
 
-	// Collect all references from .tscn files
 	for _, f := range files {
 		if !strings.HasSuffix(f.Path, ".tscn") {
 			continue
@@ -45,7 +47,6 @@ func (c *Orphans) Check(files []core.File) []core.Violation {
 		}
 	}
 
-	// Find .gd and .png files
 	exts := map[string]bool{".gd": true, ".png": true}
 	filepath.Walk(c.Root, func(
 		path string, info os.FileInfo, err error,
