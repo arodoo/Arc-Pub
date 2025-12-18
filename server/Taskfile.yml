@@ -84,6 +84,15 @@ tasks:
     desc: Generate sqlc code
     cmd: sqlc generate
 
+  # Database
+  db:migrate:
+    desc: Run database migrations
+    cmd: go run ./cmd/migrate
+
+  db:setup:
+    desc: Create database and run migrations
+    cmd: go run ./cmd/migrate
+
   # Development
   dev:
     desc: Run server in development mode

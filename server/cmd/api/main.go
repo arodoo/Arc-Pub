@@ -1,6 +1,7 @@
 // Arc-Pub - Metaverso 2D MMO Social
 // Copyright (c) 2024. MIT License.
 
+// Package main is the API server entry point.
 package main
 
 import (
@@ -14,6 +15,7 @@ import (
 	httpPkg "github.com/arc-pub/server/internal/infra/http"
 	authHandler "github.com/arc-pub/server/internal/infra/http/auth"
 	"github.com/arc-pub/server/internal/infra/postgres"
+	"github.com/arc-pub/server/internal/infra/postgres/migrate"
 	"github.com/arc-pub/server/internal/infra/token"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -26,11 +28,22 @@ func main() {
 		log.Fatalf("failed to load config: %v", err)
 	}
 
+	// Auto-create database if not exists
+	if err := migrate.EnsureDatabase(ctx, cfg.DatabaseURL); err != nil {
+		log.Printf("warn: ensure database: %v", err)
+	}
+
 	pool, err := pgxpool.New(ctx, cfg.DatabaseURL)
 	if err != nil {
 		log.Fatalf("failed to connect to db: %v", err)
 	}
 	defer pool.Close()
+
+	// Auto-run migrations on startup
+	runner := migrate.NewRunner(pool)
+	if err := runner.Run(ctx); err != nil {
+		log.Fatalf("failed to run migrations: %v", err)
+	}
 
 	hasher := crypto.NewBcryptHasher()
 	userRepo := postgres.NewUserRepo(pool)

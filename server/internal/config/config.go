@@ -6,6 +6,7 @@ package config
 
 import (
 	"github.com/caarlos0/env/v11"
+	"github.com/joho/godotenv"
 )
 
 // Config holds all application settings.
@@ -15,8 +16,11 @@ type Config struct {
 	Port        string `env:"PORT" envDefault:"8080"`
 }
 
-// Load reads config from environment variables.
+// Load reads config from .env file and environment variables.
 func Load() (*Config, error) {
+	// Load .env file if exists (ignore error if not found)
+	_ = godotenv.Load()
+
 	cfg := &Config{}
 	if err := env.Parse(cfg); err != nil {
 		return nil, err
