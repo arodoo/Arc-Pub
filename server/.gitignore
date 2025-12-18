@@ -1,0 +1,30 @@
+# Dependencies
+/vendor/
+
+# Build outputs
+/bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test coverage
+*.out
+coverage.html
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment (contains secrets!)
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Debug
+__debug_bin*

@@ -1,0 +1,20 @@
+# Godot 4 generated files
+.godot/
+
+# Exports
+export/
+*.pck
+*.zip
+
+# Mono (if using C#)
+.mono/
+data_*/
+
+# IDE
+.idea/
+*.swp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
