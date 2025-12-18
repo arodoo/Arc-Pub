@@ -1,7 +1,11 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: main.go
+// Purpose: Entry point for lint-all orchestration tool. Runs all core quality
+// checks sequentially: limits, density, arch, and sqlc. Aggregates results
+// and exits with code 1 if any check fails. Provides single command for CI
+// pipelines. Part of automated quality gate infrastructure.
+// Path: server/tools/cmd/lint-all/main.go
+// All Rights Reserved. Arc-Pub.
 
-// lint-all: Runs all quality checks.
 package main
 
 import (

@@ -1,7 +1,11 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: main.go
+// Purpose: Entry point for check-limits quality tool. Scans Go and GDScript
+// files for line count (max 120) and line length (max 120 chars) violations.
+// Uses modular scanner/checker/reporter pattern. Exits with code 1 if any
+// violations found for CI integration. Part of automated quality gates.
+// Path: server/tools/cmd/check-limits/main.go
+// All Rights Reserved. Arc-Pub.
 
-// check-limits: Enforces 120L/120char rule.
 package main
 
 import (

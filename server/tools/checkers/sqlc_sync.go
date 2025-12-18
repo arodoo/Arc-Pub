@@ -1,5 +1,12 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: sqlc_sync.go
+// Purpose: Validates that sqlc-generated code is synchronized with schema
+// source files. Compares modification timestamps between db/schema.sql and
+// generated files in internal/infra/postgres/sqlc/. If schema is newer than
+// generated code, developers need to run sqlc generate. Prevents runtime
+// errors from stale database access code. Part of contract sync quality
+// gates ensuring generated code stays fresh after schema changes.
+// Path: server/tools/checkers/sqlc_sync.go
+// All Rights Reserved. Arc-Pub.
 
 package checkers
 

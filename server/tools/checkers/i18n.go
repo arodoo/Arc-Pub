@@ -1,5 +1,12 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: i18n.go
+// Purpose: Validates internationalization compliance in GDScript files by
+// detecting hardcoded UI strings that should use tr() translation function.
+// Scans for string assignments to .text and .tooltip properties not wrapped
+// in tr() calls. This ensures all user-facing text can be localized. Part
+// of the automated quality gates defined in project global rules for visual
+// consistency and internationalization compliance across the Godot client.
+// Path: server/tools/checkers/i18n.go
+// All Rights Reserved. Arc-Pub.
 
 package checkers
 
@@ -11,7 +18,6 @@ import (
 )
 
 var (
-	// Matches strings in UI assignments not wrapped in tr()
 	stringLiteralRe = regexp.MustCompile(`\.(text|tooltip)\s*=\s*"[^"]+`)
 	trWrappedRe     = regexp.MustCompile(`tr\s*\(\s*"`)
 )

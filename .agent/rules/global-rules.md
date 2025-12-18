@@ -70,6 +70,8 @@ applyTo: '**'
     - Context: Build Pipeline.
     - Validator: Generated Go/GDScript files **MUST** be newer than `.proto` source files.
 
+You can always log in using credentials from 'server\internal\infra\postgres\seeder.go'
+
 ## Commit Rules
 - Format: `type: subject` (e.g., `feat: login system`).
 - Types: `feat`, `fix`, `chore`, `refactor`, `docs`.

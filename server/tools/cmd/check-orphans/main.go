@@ -1,7 +1,11 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: main.go
+// Purpose: Entry point for check-orphans quality tool. Detects unreferenced
+// GDScript and PNG files not used by any scene. Helps identify dead code and
+// unused assets for cleanup. Exits with code 1 if violations found. Part of
+// automated project hygiene quality gates.
+// Path: server/tools/cmd/check-orphans/main.go
+// All Rights Reserved. Arc-Pub.
 
-// check-orphans: Finds unreferenced .gd/.png files.
 package main
 
 import (

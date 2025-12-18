@@ -1,5 +1,12 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: scenes.go
+// Purpose: Validates Godot scene file integrity by checking external resource
+// references. Parses .tscn files for ext_resource declarations and verifies
+// referenced files (res:// paths) exist on disk. Catches broken references
+// early before they cause runtime errors. Part of scene integrity quality
+// gates. Converts Godot res:// paths to filesystem paths for validation.
+// Reports each missing resource with line number for quick navigation.
+// Path: server/tools/checkers/scenes.go
+// All Rights Reserved. Arc-Pub.
 
 package checkers
 

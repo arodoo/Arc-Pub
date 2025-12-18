@@ -1,7 +1,12 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: user_repo.go
+// Purpose: Implements UserRepository interface using PostgreSQL with sqlc
+// generated code. Provides data access methods for user persistence: find by
+// email, create user, and check existence. Uses pgx connection pool for
+// efficient database connections. Converts between sqlc-generated types and
+// domain entities ensuring clean separation between persistence and domain.
+// Path: server/internal/infra/postgres/user_repo.go
+// All Rights Reserved. Arc-Pub.
 
-// Package postgres provides PostgreSQL implementations.
 package postgres
 
 import (
@@ -39,7 +44,6 @@ func (r *UserRepo) FindByEmail(
 	if err != nil {
 		return nil, err
 	}
-
 	return rowToUser(row), nil
 }
 

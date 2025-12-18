@@ -1,7 +1,13 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: runner.go
+// Purpose: Provides database migration functionality with version tracking
+// similar to Flyway or Liquibase. Embeds SQL migration files at compile time
+// using Go embed directive. Tracks applied migrations in schema_migrations
+// table to prevent re-execution. Runs migrations in sorted order within
+// transactions for atomicity. Supports multiple migration files following
+// the naming convention XXX_description.up.sql.
+// Path: server/internal/infra/postgres/migrate/runner.go
+// All Rights Reserved. Arc-Pub.
 
-// Package migrate provides database migration utilities.
 package migrate
 
 import (

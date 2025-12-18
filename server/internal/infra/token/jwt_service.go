@@ -1,7 +1,12 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: jwt_service.go
+// Purpose: Implements TokenService interface using JSON Web Tokens (JWT) for
+// stateless authentication. Generates access tokens (15 min expiry) for API
+// authentication and refresh tokens (7 days) for session renewal. Uses HS256
+// symmetric signing algorithm with configurable secret. Includes user ID and
+// role in claims for authorization. Follows industry JWT best practices.
+// Path: server/internal/infra/token/jwt_service.go
+// All Rights Reserved. Arc-Pub.
 
-// Package token provides JWT generation.
 package token
 
 import (

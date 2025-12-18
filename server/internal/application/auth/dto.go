@@ -1,7 +1,12 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: dto.go
+// Purpose: Defines Data Transfer Objects for the authentication application
+// layer. DTOs provide a clean interface between infrastructure and domain
+// layers, preventing domain entities from leaking into HTTP responses. Includes
+// LoginRequest for input validation, LoginResponse for API output with JSON
+// tags following snake_case convention, and TokenPair for internal token data.
+// Path: server/internal/application/auth/dto.go
+// All Rights Reserved. Arc-Pub.
 
-// Package auth contains authentication application logic.
 package auth
 
 // LoginRequest is the input DTO for login.

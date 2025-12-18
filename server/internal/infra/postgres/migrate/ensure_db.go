@@ -1,5 +1,11 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: ensure_db.go
+// Purpose: Provides automatic database creation functionality similar to
+// Hibernate's hibernate.hbm2ddl.auto=create. Connects to the default postgres
+// database to check if target database exists, creates it if missing. This
+// enables zero-configuration first-run setup where developers only need to
+// provide credentials and the system handles all database initialization.
+// Path: server/internal/infra/postgres/migrate/ensure_db.go
+// All Rights Reserved. Arc-Pub.
 
 package migrate
 

@@ -1,7 +1,11 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: main.go
+// Purpose: Entry point for the Arc-Pub API server. Initializes configuration,
+// establishes PostgreSQL database connection, runs automatic migrations on
+// startup (Hibernate-style), seeds admin user for development, configures
+// authentication use cases, and starts the HTTP server with Chi router.
+// Path: server/cmd/api/main.go
+// All Rights Reserved. Arc-Pub.
 
-// Package main is the API server entry point.
 package main
 
 import (
@@ -28,7 +32,6 @@ func main() {
 		log.Fatalf("failed to load config: %v", err)
 	}
 
-	// Auto-create database if not exists
 	if err := migrate.EnsureDatabase(ctx, cfg.DatabaseURL); err != nil {
 		log.Printf("warn: ensure database: %v", err)
 	}
@@ -39,7 +42,6 @@ func main() {
 	}
 	defer pool.Close()
 
-	// Auto-run migrations on startup
 	runner := migrate.NewRunner(pool)
 	if err := runner.Run(ctx); err != nil {
 		log.Fatalf("failed to run migrations: %v", err)
@@ -56,7 +58,6 @@ func main() {
 
 	loginUC := auth.NewLoginUseCase(userRepo, jwtSvc, hasher)
 	handler := authHandler.NewHandler(loginUC)
-
 	router := httpPkg.NewRouter(handler)
 
 	addr := ":" + cfg.Port

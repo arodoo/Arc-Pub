@@ -1,5 +1,11 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: seeder.go
+// Purpose: Provides development data seeding functionality for initial setup.
+// Creates an admin user on application startup if one does not exist. Uses
+// the same repository and hasher interfaces as production code ensuring
+// consistency. Logs actions for visibility. Admin credentials are hardcoded
+// for development only and should never be used in production environments.
+// Path: server/internal/infra/postgres/seeder.go
+// All Rights Reserved. Arc-Pub.
 
 package postgres
 
@@ -47,13 +53,7 @@ func (s *Seeder) SeedAdmin(ctx context.Context) error {
 		return err
 	}
 
-	admin := user.NewUser(
-		uuid.New(),
-		adminEmail,
-		hash,
-		user.RoleAdmin,
-	)
-
+	admin := user.NewUser(uuid.New(), adminEmail, hash, user.RoleAdmin)
 	if err := s.users.Create(ctx, admin); err != nil {
 		return err
 	}

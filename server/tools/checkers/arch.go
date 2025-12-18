@@ -1,5 +1,12 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: arch.go
+// Purpose: Enforces architectural layer boundaries by detecting forbidden
+// imports. Validates that cmd/ layer does not directly import infrastructure
+// packages, maintaining proper dependency direction per hexagonal architecture.
+// Parses Go source files to extract imports and checks against forbidden list.
+// Part of architecture quality gates preventing coupling violations that make
+// code harder to test and maintain. Reports each violation with line number.
+// Path: server/tools/checkers/arch.go
+// All Rights Reserved. Arc-Pub.
 
 package checkers
 
@@ -11,7 +18,6 @@ import (
 	"github.com/arc-pub/server/tools/core"
 )
 
-// Forbidden imports from cmd layer
 var forbiddenImports = []string{
 	"internal/infra/postgres",
 	"internal/infra/http",

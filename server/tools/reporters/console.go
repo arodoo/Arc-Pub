@@ -1,7 +1,12 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: console.go
+// Purpose: Implements the Reporter interface for human-readable console
+// output. Formats violations with file path, line number, rule name, and
+// message using Unicode symbols for visual clarity (checkmarks, crosses).
+// Outputs summary count at the end. Designed for developer terminal usage
+// during local development. Returns nil error as stdout writes rarely fail.
+// Path: server/tools/reporters/console.go
+// All Rights Reserved. Arc-Pub.
 
-// Package reporters provides violation output implementations.
 package reporters
 
 import (

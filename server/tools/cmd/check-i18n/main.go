@@ -1,7 +1,11 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: main.go
+// Purpose: Entry point for check-i18n quality tool. Scans GDScript files for
+// hardcoded UI strings that should use tr() translation function. Ensures
+// all user-facing text can be localized. Exits with code 1 if violations
+// found. Part of automated internationalization quality gates.
+// Path: server/tools/cmd/check-i18n/main.go
+// All Rights Reserved. Arc-Pub.
 
-// check-i18n: Enforces tr() usage for strings.
 package main
 
 import (

@@ -1,7 +1,12 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: handler.go
+// Purpose: HTTP handler for authentication endpoints following Chi router
+// conventions. Translates HTTP requests into application use case calls and
+// formats responses. Handles JSON parsing, error translation to HTTP status
+// codes, and response serialization. Keeps HTTP concerns separate from business
+// logic by delegating to LoginUseCase for actual authentication processing.
+// Path: server/internal/infra/http/auth/handler.go
+// All Rights Reserved. Arc-Pub.
 
-// Package auth provides HTTP handlers for authentication.
 package auth
 
 import (

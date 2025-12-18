@@ -1,5 +1,12 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: ports.go
+// Purpose: Defines port interfaces for the authentication application layer
+// following hexagonal architecture principles. Ports are abstract contracts
+// that infrastructure adapters must implement. UserRepository handles user
+// persistence, TokenService manages JWT generation, PasswordHasher provides
+// bcrypt operations. This inversion of control enables testing with mocks
+// and swapping implementations without changing business logic.
+// Path: server/internal/application/auth/ports.go
+// All Rights Reserved. Arc-Pub.
 
 package auth
 

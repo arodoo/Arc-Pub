@@ -1,7 +1,11 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: main.go
+// Purpose: Entry point for check-scenes quality tool. Validates Godot .tscn
+// files for broken external resource references. Parses ext_resource paths
+// and verifies referenced files exist. Exits with code 1 if violations found.
+// Part of automated scene integrity quality gates.
+// Path: server/tools/cmd/check-scenes/main.go
+// All Rights Reserved. Arc-Pub.
 
-// check-scenes: Verifies .tscn external resources exist.
 package main
 
 import (

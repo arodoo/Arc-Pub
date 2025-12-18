@@ -1,7 +1,11 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: main.go
+// Purpose: Standalone CLI tool for running database migrations independently
+// from the main server. Creates the target database if it does not exist,
+// then applies all pending migrations in order. Useful for CI/CD pipelines
+// and manual database setup without starting the full application server.
+// Path: server/cmd/migrate/main.go
+// All Rights Reserved. Arc-Pub.
 
-// cmd/migrate: Runs database migrations.
 package main
 
 import (
@@ -21,7 +25,6 @@ func main() {
 		log.Fatalf("load config: %v", err)
 	}
 
-	// Auto-create database if not exists
 	if err := migrate.EnsureDatabase(ctx, cfg.DatabaseURL); err != nil {
 		log.Fatalf("ensure database: %v", err)
 	}

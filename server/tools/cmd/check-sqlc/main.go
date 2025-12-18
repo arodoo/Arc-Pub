@@ -1,7 +1,11 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: main.go
+// Purpose: Entry point for check-sqlc quality tool. Verifies sqlc generated
+// code is synchronized with database schema source files. Compares file
+// timestamps to detect stale code. Exits with code 1 if regeneration needed.
+// Part of automated contract sync quality gates.
+// Path: server/tools/cmd/check-sqlc/main.go
+// All Rights Reserved. Arc-Pub.
 
-// check-sqlc: Verifies sqlc generated code is fresh.
 package main
 
 import (

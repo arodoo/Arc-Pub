@@ -1,5 +1,12 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: density.go
+// Purpose: Validates folder file count limits following cognitive load
+// principles. Industry standard: 7-10 files max per folder for easy
+// navigation. Uses 10 as default with scalable exceptions for special cases.
+// Scans all directories recursively, counting non-hidden files. Reports
+// violations for folders exceeding the limit to encourage organization.
+// Helps maintain clean project structure as codebase grows over time.
+// Path: server/tools/checkers/density.go
+// All Rights Reserved. Arc-Pub.
 
 package checkers
 

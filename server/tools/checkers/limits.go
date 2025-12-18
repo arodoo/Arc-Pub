@@ -1,7 +1,13 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: limits.go
+// Purpose: Validates file and line length limits following cognitive load
+// principles. Enforces maximum 120 lines per file to encourage focused,
+// single-responsibility modules. Enforces maximum 120 characters per line
+// for readability without horizontal scrolling. These limits are slightly
+// under CI thresholds to provide buffer. Reports violations for each file
+// exceeding line count and each individual line exceeding character count.
+// Path: server/tools/checkers/limits.go
+// All Rights Reserved. Arc-Pub.
 
-// Package checkers provides quality check implementations.
 package checkers
 
 import (

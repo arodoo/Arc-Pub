@@ -1,7 +1,12 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: router.go
+// Purpose: Configures the Chi HTTP router with middleware stack and route
+// definitions. Sets up logging, panic recovery, and request ID middleware for
+// observability. Defines API versioning structure (/api/v1) and mounts auth
+// routes. Centralizes all HTTP routing configuration in one place following
+// the single responsibility principle for easy maintenance and modification.
+// Path: server/internal/infra/http/router.go
+// All Rights Reserved. Arc-Pub.
 
-// Package http provides HTTP server setup.
 package http
 
 import (

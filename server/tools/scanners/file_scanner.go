@@ -1,7 +1,13 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: file_scanner.go
+// Purpose: Implements the Scanner interface for filesystem-based file
+// discovery. Walks directory trees recursively using filepath.Walk, filtering
+// files by extension. Reads file content and splits into lines for efficient
+// checker processing. Includes ScanDirs helper for directory-level checks.
+// Skips hidden directories and files. Used by all quality tool entry points
+// to discover source files matching specified extensions.
+// Path: server/tools/scanners/file_scanner.go
+// All Rights Reserved. Arc-Pub.
 
-// Package scanners provides file scanning implementations.
 package scanners
 
 import (

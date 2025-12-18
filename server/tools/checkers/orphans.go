@@ -1,5 +1,12 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: orphans.go
+// Purpose: Detects orphaned files (dead code) not referenced by any scene.
+// Builds a reference map from all .tscn files by extracting res:// paths,
+// then scans for .gd scripts and .png images not in that map. Helps maintain
+// a clean codebase by identifying unused assets and scripts for removal.
+// Part of project quality gates for scene integrity. Reports each orphaned
+// file path for developer review and potential cleanup decision.
+// Path: server/tools/checkers/orphans.go
+// All Rights Reserved. Arc-Pub.
 
 package checkers
 

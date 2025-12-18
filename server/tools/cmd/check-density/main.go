@@ -1,7 +1,11 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: main.go
+// Purpose: Entry point for check-density quality tool. Scans directories and
+// validates folder file counts do not exceed 10 files per folder. Follows
+// cognitive load principles for navigable project structure. Exits with
+// code 1 if violations found. Part of automated quality gates.
+// Path: server/tools/cmd/check-density/main.go
+// All Rights Reserved. Arc-Pub.
 
-// check-density: Enforces max files per folder.
 package main
 
 import (

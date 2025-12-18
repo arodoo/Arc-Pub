@@ -1,7 +1,11 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: main.go
+// Purpose: Entry point for check-assets quality tool. Scans Godot project for
+// image and audio assets exceeding 2MB size limit. Large assets impact game
+// loading times and repository size. Exits with code 1 if violations found.
+// Part of automated asset management quality gates.
+// Path: server/tools/cmd/check-assets/main.go
+// All Rights Reserved. Arc-Pub.
 
-// check-assets: Verifies asset file sizes.
 package main
 
 import (

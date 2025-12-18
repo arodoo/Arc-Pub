@@ -1,5 +1,11 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: login_usecase.go
+// Purpose: Implements the login use case as the core application service for
+// user authentication. Orchestrates the authentication flow: validates input
+// credentials, retrieves user from repository, verifies password hash, and
+// generates JWT token pair on success. Dependencies are injected via ports
+// interfaces enabling testability and infrastructure independence as per DDD.
+// Path: server/internal/application/auth/login_usecase.go
+// All Rights Reserved. Arc-Pub.
 
 package auth
 

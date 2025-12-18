@@ -1,5 +1,12 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: assets.go
+// Purpose: Validates asset file size limits to prevent bloated game builds.
+// Scans for image (png, jpg) and audio (wav) files exceeding 2MB threshold.
+// Large assets should be compressed or split. This keeps repository size
+// manageable and game loading times acceptable. Part of Godot-specific
+// quality gates. Reports each oversized file with actual size for easy
+// identification and remediation by artists and developers.
+// Path: server/tools/checkers/assets.go
+// All Rights Reserved. Arc-Pub.
 
 package checkers
 

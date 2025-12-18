@@ -1,7 +1,12 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: user.go
+// Purpose: Defines the User aggregate root for the identity bounded context.
+// Contains core user identity data including UUID, email, hashed password, and
+// role. As an aggregate root, User is the main entry point for user-related
+// operations and ensures consistency. Includes Role type with predefined
+// constants (user, admin) and helper methods like IsAdmin for authorization.
+// Path: server/internal/domain/user/user.go
+// All Rights Reserved. Arc-Pub.
 
-// Package user defines the User aggregate root.
 package user
 
 import "github.com/google/uuid"

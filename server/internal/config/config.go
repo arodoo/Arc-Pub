@@ -1,7 +1,12 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: config.go
+// Purpose: Provides centralized application configuration management. Loads
+// environment variables from .env file using godotenv, then parses them into
+// a strongly-typed Config struct. Supports required fields (DATABASE_URL,
+// JWT_SECRET) and optional fields with defaults (PORT). Single source of
+// truth for all application settings following twelve-factor app principles.
+// Path: server/internal/config/config.go
+// All Rights Reserved. Arc-Pub.
 
-// Package config provides application configuration.
 package config
 
 import (
@@ -18,7 +23,6 @@ type Config struct {
 
 // Load reads config from .env file and environment variables.
 func Load() (*Config, error) {
-	// Load .env file if exists (ignore error if not found)
 	_ = godotenv.Load()
 
 	cfg := &Config{}

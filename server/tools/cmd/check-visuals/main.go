@@ -1,7 +1,11 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: main.go
+// Purpose: Entry point for check-visuals quality tool. Scans GDScript and
+// scene files for hardcoded Color() constructors and HEX codes. Colors should
+// use Palette singleton for consistent theming. Exits with code 1 if violations
+// found. Part of automated visual consistency quality gates.
+// Path: server/tools/cmd/check-visuals/main.go
+// All Rights Reserved. Arc-Pub.
 
-// check-visuals: Enforces Palette usage for colors.
 package main
 
 import (

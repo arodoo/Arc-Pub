@@ -1,7 +1,13 @@
-// Arc-Pub - Metaverso 2D MMO Social
-// Copyright (c) 2024. MIT License.
+// File: bcrypt_hasher.go
+// Purpose: Implements the PasswordHasher interface using bcrypt algorithm.
+// Bcrypt is the industry standard for password hashing with built-in salting
+// and configurable cost factor. Uses cost 12 providing strong security while
+// maintaining acceptable performance. Hash method generates secure hashes,
+// Compare method safely verifies passwords against stored hashes using
+// constant-time comparison to prevent timing attacks.
+// Path: server/internal/infra/crypto/bcrypt_hasher.go
+// All Rights Reserved. Arc-Pub.
 
-// Package crypto provides password hashing.
 package crypto
 
 import (
