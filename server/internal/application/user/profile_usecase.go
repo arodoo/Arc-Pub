@@ -58,10 +58,17 @@ func (uc *ProfileUseCase) Execute(
 		faction = &f
 	}
 
+	var serverID *string
+	if profile.ServerID != nil {
+		s := profile.ServerID.String()
+		serverID = &s
+	}
+
 	return &ProfileResponse{
-		ID:      profile.ID.String(),
-		Email:   profile.Email,
-		Faction: faction,
-		Ships:   ships,
+		ID:       profile.ID.String(),
+		Email:    profile.Email,
+		ServerID: serverID,
+		Faction:  faction,
+		Ships:    ships,
 	}, nil
 }

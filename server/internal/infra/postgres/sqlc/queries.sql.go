@@ -104,17 +104,45 @@ func (q *Queries) FindUserByEmail(ctx context.Context, email string) (FindUserBy
 	return i, err
 }
 
+const getServerByID = `-- name: GetServerByID :one
+SELECT id, name, region, host, port
+FROM servers
+WHERE id = $1
+`
+
+type GetServerByIDRow struct {
+	ID     pgtype.UUID `json:"id"`
+	Name   string      `json:"name"`
+	Region string      `json:"region"`
+	Host   pgtype.Text `json:"host"`
+	Port   pgtype.Int4 `json:"port"`
+}
+
+func (q *Queries) GetServerByID(ctx context.Context, id pgtype.UUID) (GetServerByIDRow, error) {
+	row := q.db.QueryRow(ctx, getServerByID, id)
+	var i GetServerByIDRow
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Region,
+		&i.Host,
+		&i.Port,
+	)
+	return i, err
+}
+
 const getUserProfile = `-- name: GetUserProfile :one
-SELECT id, email, role, faction
+SELECT id, email, role, faction, server_id
 FROM users
 WHERE id = $1
 `
 
 type GetUserProfileRow struct {
-	ID      pgtype.UUID     `json:"id"`
-	Email   string          `json:"email"`
-	Role    string          `json:"role"`
-	Faction NullFactionType `json:"faction"`
+	ID       pgtype.UUID     `json:"id"`
+	Email    string          `json:"email"`
+	Role     string          `json:"role"`
+	Faction  NullFactionType `json:"faction"`
+	ServerID pgtype.UUID     `json:"server_id"`
 }
 
 func (q *Queries) GetUserProfile(ctx context.Context, id pgtype.UUID) (GetUserProfileRow, error) {
@@ -125,6 +153,7 @@ func (q *Queries) GetUserProfile(ctx context.Context, id pgtype.UUID) (GetUserPr
 		&i.Email,
 		&i.Role,
 		&i.Faction,
+		&i.ServerID,
 	)
 	return i, err
 }
@@ -168,6 +197,47 @@ func (q *Queries) GetUserShips(ctx context.Context, userID pgtype.UUID) ([]GetUs
 	return items, nil
 }
 
+const listActiveServers = `-- name: ListActiveServers :many
+SELECT id, name, region, host, port
+FROM servers
+WHERE is_active = true
+ORDER BY name
+`
+
+type ListActiveServersRow struct {
+	ID     pgtype.UUID `json:"id"`
+	Name   string      `json:"name"`
+	Region string      `json:"region"`
+	Host   pgtype.Text `json:"host"`
+	Port   pgtype.Int4 `json:"port"`
+}
+
+func (q *Queries) ListActiveServers(ctx context.Context) ([]ListActiveServersRow, error) {
+	rows, err := q.db.Query(ctx, listActiveServers)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ListActiveServersRow{}
+	for rows.Next() {
+		var i ListActiveServersRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Region,
+			&i.Host,
+			&i.Port,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const setUserFaction = `-- name: SetUserFaction :exec
 UPDATE users SET faction = $1 WHERE id = $2 AND faction IS NULL
 `
@@ -179,5 +249,19 @@ type SetUserFactionParams struct {
 
 func (q *Queries) SetUserFaction(ctx context.Context, arg SetUserFactionParams) error {
 	_, err := q.db.Exec(ctx, setUserFaction, arg.Faction, arg.ID)
+	return err
+}
+
+const setUserServer = `-- name: SetUserServer :exec
+UPDATE users SET server_id = $1 WHERE id = $2 AND server_id IS NULL
+`
+
+type SetUserServerParams struct {
+	ServerID pgtype.UUID `json:"server_id"`
+	ID       pgtype.UUID `json:"id"`
+}
+
+func (q *Queries) SetUserServer(ctx context.Context, arg SetUserServerParams) error {
+	_, err := q.db.Exec(ctx, setUserServer, arg.ServerID, arg.ID)
 	return err
 }

@@ -70,6 +70,9 @@ applyTo: '**'
     - Context: Build Pipeline.
     - Validator: Generated Go/GDScript files **MUST** be newer than `.proto` source files.
 
+## 5. Scripts and comands 
+    -build godot project: gdparse client/scripts/**/*.gd
+
 You can always log in using credentials from 'server\internal\infra\postgres\seeder.go'
 
 ## Commit Rules

@@ -1,8 +1,8 @@
 # File: api.gd
 # Purpose: Autoload singleton providing HTTP client for backend communication.
 # Handles REST API calls with JSON serialization, token storage, and signals
-# for async response handling. Centralizes all backend interactions for
-# maintainability. Includes login, profile, and faction selection methods.
+# for async response handling. Includes login, profile, servers, and faction
+# methods. Centralizes all backend interactions for maintainability.
 # Path: client/scripts/autoload/api.gd
 # All Rights Reserved. Arc-Pub.
 
@@ -12,6 +12,10 @@ signal login_success(tokens: Dictionary)
 signal login_failed(error: String)
 signal profile_loaded(profile: Dictionary)
 signal profile_failed(error: String)
+signal servers_loaded(servers: Array)
+signal servers_failed(error: String)
+signal server_selected(result: Dictionary)
+signal server_failed(error: String)
 signal faction_selected(result: Dictionary)
 signal faction_failed(error: String)
 
@@ -37,6 +41,16 @@ func login(email: String, password: String) -> void:
 func get_profile() -> void:
 	_pending_action = "profile"
 	_http_get("/user/profile")
+
+
+func get_servers() -> void:
+	_pending_action = "servers"
+	_http_get("/servers")
+
+
+func select_server(server_id: String) -> void:
+	_pending_action = "server"
+	_post("/user/server", {"server_id": server_id})
 
 
 func select_faction(faction: String) -> void:
@@ -75,12 +89,11 @@ func _on_request_completed(
 	var json: Variant = JSON.parse_string(body.get_string_from_utf8())
 	
 	match _pending_action:
-		"login":
-			_handle_login(response_code, json)
-		"profile":
-			_handle_profile(response_code, json)
-		"faction":
-			_handle_faction(response_code, json)
+		"login": _handle_login(response_code, json)
+		"profile": _handle_profile(response_code, json)
+		"servers": _handle_servers(response_code, json)
+		"server": _handle_server(response_code, json)
+		"faction": _handle_faction(response_code, json)
 
 
 func _handle_login(code: int, data: Variant) -> void:
@@ -98,6 +111,20 @@ func _handle_profile(code: int, data: Variant) -> void:
 		profile_failed.emit("Failed to load profile")
 
 
+func _handle_servers(code: int, data: Variant) -> void:
+	if code == 200 and data is Array:
+		servers_loaded.emit(data)
+	else:
+		servers_failed.emit("Failed to load servers")
+
+
+func _handle_server(code: int, data: Variant) -> void:
+	if code == 200 and data is Dictionary:
+		server_selected.emit(data)
+	else:
+		server_failed.emit("Failed to select server")
+
+
 func _handle_faction(code: int, data: Variant) -> void:
 	if code == 200 and data is Dictionary:
 		faction_selected.emit(data)
@@ -109,6 +136,8 @@ func _emit_error(msg: String) -> void:
 	match _pending_action:
 		"login": login_failed.emit(msg)
 		"profile": profile_failed.emit(msg)
+		"servers": servers_failed.emit(msg)
+		"server": server_failed.emit(msg)
 		"faction": faction_failed.emit(msg)
 
 

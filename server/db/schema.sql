@@ -3,12 +3,23 @@
 
 CREATE TYPE faction_type AS ENUM ('red', 'blue', 'green');
 
+CREATE TABLE servers (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(100) NOT NULL,
+    region VARCHAR(50) NOT NULL,
+    host VARCHAR(255),
+    port INT,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     email VARCHAR(255) UNIQUE NOT NULL,
     hashed_password TEXT NOT NULL,
     role VARCHAR(50) NOT NULL DEFAULT 'user',
     faction faction_type,
+    server_id UUID REFERENCES servers(id),
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

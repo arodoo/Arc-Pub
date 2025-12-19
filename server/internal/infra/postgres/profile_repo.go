@@ -1,8 +1,8 @@
 // File: profile_repo.go
 // Purpose: Implements ProfileRepository interface using PostgreSQL with sqlc
-// generated code. Provides GetProfile to retrieve user faction data and
-// SetFaction to update user's faction choice. Uses pgx connection pool for
-// database access. Converts between sqlc types and domain entities cleanly.
+// generated code. Provides GetProfile to retrieve user profile data including
+// faction and server. SetFaction updates user's faction choice. Uses pgx pool
+// for database access. Converts between sqlc types and domain entities.
 // Path: server/internal/infra/postgres/profile_repo.go
 // All Rights Reserved. Arc-Pub.
 
@@ -44,10 +44,17 @@ func (r *ProfileRepo) GetProfile(
 		faction = &f
 	}
 
+	var serverID *uuid.UUID
+	if row.ServerID.Valid {
+		id := pgtypeToUUID(row.ServerID)
+		serverID = &id
+	}
+
 	return &appUser.Profile{
-		ID:      pgtypeToUUID(row.ID),
-		Email:   row.Email,
-		Faction: faction,
+		ID:       pgtypeToUUID(row.ID),
+		Email:    row.Email,
+		Faction:  faction,
+		ServerID: serverID,
 	}, nil
 }
 

@@ -24,9 +24,10 @@ type ProfileRepository interface {
 
 // Profile holds user data for the profile endpoint.
 type Profile struct {
-	ID      uuid.UUID
-	Email   string
-	Faction *domainUser.Faction
+	ID       uuid.UUID
+	Email    string
+	Faction  *domainUser.Faction
+	ServerID *uuid.UUID
 }
 
 // ShipRepository defines ship persistence operations.

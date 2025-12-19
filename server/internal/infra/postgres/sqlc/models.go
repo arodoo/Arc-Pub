@@ -54,6 +54,16 @@ func (ns NullFactionType) Value() (driver.Value, error) {
 	return string(ns.FactionType), nil
 }
 
+type Server struct {
+	ID        pgtype.UUID        `json:"id"`
+	Name      string             `json:"name"`
+	Region    string             `json:"region"`
+	Host      pgtype.Text        `json:"host"`
+	Port      pgtype.Int4        `json:"port"`
+	IsActive  pgtype.Bool        `json:"is_active"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+}
+
 type Ship struct {
 	ID        pgtype.UUID        `json:"id"`
 	UserID    pgtype.UUID        `json:"user_id"`
@@ -68,5 +78,6 @@ type User struct {
 	HashedPassword string             `json:"hashed_password"`
 	Role           string             `json:"role"`
 	Faction        NullFactionType    `json:"faction"`
+	ServerID       pgtype.UUID        `json:"server_id"`
 	CreatedAt      pgtype.Timestamptz `json:"created_at"`
 }

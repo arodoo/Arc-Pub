@@ -10,10 +10,11 @@ package user
 
 // ProfileResponse is the output DTO for user profile.
 type ProfileResponse struct {
-	ID      string    `json:"id"`
-	Email   string    `json:"email"`
-	Faction *string   `json:"faction"`
-	Ships   []ShipDTO `json:"ships"`
+	ID       string    `json:"id"`
+	Email    string    `json:"email"`
+	ServerID *string   `json:"server_id"`
+	Faction  *string   `json:"faction"`
+	Ships    []ShipDTO `json:"ships"`
 }
 
 // ShipDTO represents a ship in API responses.

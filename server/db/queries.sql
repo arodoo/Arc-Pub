@@ -11,12 +11,15 @@ VALUES ($1, $2, $3, $4);
 SELECT EXISTS(SELECT 1 FROM users WHERE email = $1);
 
 -- name: GetUserProfile :one
-SELECT id, email, role, faction
+SELECT id, email, role, faction, server_id
 FROM users
 WHERE id = $1;
 
 -- name: SetUserFaction :exec
 UPDATE users SET faction = $1 WHERE id = $2 AND faction IS NULL;
+
+-- name: SetUserServer :exec
+UPDATE users SET server_id = $1 WHERE id = $2 AND server_id IS NULL;
 
 -- name: CreateShip :exec
 INSERT INTO ships (id, user_id, ship_type, slot)
@@ -30,3 +33,14 @@ ORDER BY slot;
 
 -- name: CountUserShips :one
 SELECT COUNT(*) FROM ships WHERE user_id = $1;
+
+-- name: ListActiveServers :many
+SELECT id, name, region, host, port
+FROM servers
+WHERE is_active = true
+ORDER BY name;
+
+-- name: GetServerByID :one
+SELECT id, name, region, host, port
+FROM servers
+WHERE id = $1;

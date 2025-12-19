@@ -1,8 +1,8 @@
 # File: login.gd
 # Purpose: Controller script for login scene UI. Handles user input from
 # email and password fields, validates non-empty input, triggers API login
-# request, and routes to faction_select or lobby based on profile. Connects
-# to API signals for async response handling. Entry point for authentication.
+# request, and routes to server_select, faction_select or lobby based on
+# profile state. Connects to API signals for async response handling.
 # Path: client/scripts/login/login.gd
 # All Rights Reserved. Arc-Pub.
 
@@ -51,15 +51,19 @@ func _on_login_failed(error: String) -> void:
 
 
 func _on_profile_loaded(profile: Dictionary) -> void:
+	var server_id: Variant = profile.get("server_id")
 	var faction: Variant = profile.get("faction")
-	if faction == null or faction == "":
+	
+	if server_id == null or server_id == "":
+		get_tree().change_scene_to_file("res://scenes/server_select/server_select.tscn")
+	elif faction == null or faction == "":
 		get_tree().change_scene_to_file("res://scenes/faction_select/faction_select.tscn")
 	else:
 		get_tree().change_scene_to_file("res://scenes/lobby/lobby.tscn")
 
 
 func _on_profile_failed(_error: String) -> void:
-	get_tree().change_scene_to_file("res://scenes/faction_select/faction_select.tscn")
+	get_tree().change_scene_to_file("res://scenes/server_select/server_select.tscn")
 
 
 func _get_user_id_from_token(token: String) -> String:
