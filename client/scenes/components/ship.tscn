@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://cship00001"]
+
+[ext_resource type="Script" path="res://scripts/components/ship.gd" id="1"]
+[ext_resource type="Shader" path="res://assets/shaders/faction_color.gdshader" id="2"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ship"]
+shader = ExtResource("2")
+shader_parameter/faction_color = Color(1, 1, 1, 1)
+shader_parameter/color_intensity = 0.8
+
+[node name="Ship" type="Sprite2D"]
+material = SubResource("ShaderMaterial_ship")
+script = ExtResource("1")

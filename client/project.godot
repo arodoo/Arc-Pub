@@ -21,6 +21,8 @@ config/icon="res://icon.svg"
 Config="*res://scripts/autoload/config.gd"
 Logger="*res://scripts/autoload/logger.gd"
 API="*res://scripts/autoload/api.gd"
+GameData="*res://scripts/autoload/game_data.gd"
+ShipsRegistry="*res://scripts/autoload/ships_registry.gd"
 
 [display]
 
