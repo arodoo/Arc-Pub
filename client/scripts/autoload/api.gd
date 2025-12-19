@@ -18,6 +18,8 @@ signal server_selected(result: Dictionary)
 signal server_failed(error: String)
 signal faction_selected(result: Dictionary)
 signal faction_failed(error: String)
+signal reset_done()
+signal reset_failed(error: String)
 
 const BASE_URL: String = "http://localhost:8080/api/v1"
 
@@ -94,6 +96,7 @@ func _on_request_completed(
 		"servers": _handle_servers(response_code, json)
 		"server": _handle_server(response_code, json)
 		"faction": _handle_faction(response_code, json)
+		"reset": _handle_reset(response_code, json)
 
 
 func _handle_login(code: int, data: Variant) -> void:
@@ -139,7 +142,20 @@ func _emit_error(msg: String) -> void:
 		"servers": servers_failed.emit(msg)
 		"server": server_failed.emit(msg)
 		"faction": faction_failed.emit(msg)
+		"reset": reset_failed.emit(msg)
 
 
 func set_user_id(id: String) -> void:
 	_user_id = id
+
+
+func reset_progress() -> void:
+	_pending_action = "reset"
+	_post("/dev/reset", {})
+
+
+func _handle_reset(code: int, _data: Variant) -> void:
+	if code == 200:
+		reset_done.emit()
+	else:
+		reset_failed.emit("Reset failed")

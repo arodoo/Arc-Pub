@@ -1,0 +1,3 @@
+# GDLint ignores identifier warnings for these globals (autoloads)
+# Unfortunately gdlint doesn't support declaring autoloads
+# The warnings about Config, API, Logger are false positives

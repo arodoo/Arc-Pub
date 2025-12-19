@@ -44,3 +44,9 @@ ORDER BY name;
 SELECT id, name, region, host, port
 FROM servers
 WHERE id = $1;
+
+-- name: ResetUserProgress :exec
+UPDATE users SET faction = NULL, server_id = NULL WHERE id = $1;
+
+-- name: DeleteUserShips :exec
+DELETE FROM ships WHERE user_id = $1;

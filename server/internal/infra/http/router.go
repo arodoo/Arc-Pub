@@ -2,7 +2,7 @@
 // Purpose: Configures the Chi HTTP router with middleware stack and route
 // definitions. Sets up logging, panic recovery, and request ID middleware for
 // observability. Defines API versioning structure (/api/v1) and mounts auth,
-// user, and server routes. Centralizes all HTTP routing configuration.
+// user, server, and dev routes. Centralizes all HTTP routing configuration.
 // Path: server/internal/infra/http/router.go
 // All Rights Reserved. Arc-Pub.
 
@@ -10,6 +10,7 @@ package http
 
 import (
 	"github.com/arc-pub/server/internal/infra/http/auth"
+	"github.com/arc-pub/server/internal/infra/http/dev"
 	"github.com/arc-pub/server/internal/infra/http/server"
 	"github.com/arc-pub/server/internal/infra/http/user"
 	"github.com/go-chi/chi/v5"
@@ -21,6 +22,7 @@ func NewRouter(
 	authHandler *auth.Handler,
 	userHandler *user.Handler,
 	serverHandler *server.Handler,
+	devHandler *dev.Handler,
 ) *chi.Mux {
 	r := chi.NewRouter()
 
@@ -37,6 +39,9 @@ func NewRouter(
 			r.Get("/profile", userHandler.GetProfile)
 			r.Post("/server", serverHandler.SelectServer)
 			r.Post("/faction", userHandler.SelectFaction)
+		})
+		r.Route("/dev", func(r chi.Router) {
+			r.Post("/reset", devHandler.ResetUser)
 		})
 	})
 

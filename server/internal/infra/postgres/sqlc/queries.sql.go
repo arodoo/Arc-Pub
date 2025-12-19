@@ -66,6 +66,15 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) error {
 	return err
 }
 
+const deleteUserShips = `-- name: DeleteUserShips :exec
+DELETE FROM ships WHERE user_id = $1
+`
+
+func (q *Queries) DeleteUserShips(ctx context.Context, userID pgtype.UUID) error {
+	_, err := q.db.Exec(ctx, deleteUserShips, userID)
+	return err
+}
+
 const existsUserByEmail = `-- name: ExistsUserByEmail :one
 SELECT EXISTS(SELECT 1 FROM users WHERE email = $1)
 `
@@ -236,6 +245,15 @@ func (q *Queries) ListActiveServers(ctx context.Context) ([]ListActiveServersRow
 		return nil, err
 	}
 	return items, nil
+}
+
+const resetUserProgress = `-- name: ResetUserProgress :exec
+UPDATE users SET faction = NULL, server_id = NULL WHERE id = $1
+`
+
+func (q *Queries) ResetUserProgress(ctx context.Context, id pgtype.UUID) error {
+	_, err := q.db.Exec(ctx, resetUserProgress, id)
+	return err
 }
 
 const setUserFaction = `-- name: SetUserFaction :exec

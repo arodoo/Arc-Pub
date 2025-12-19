@@ -2,7 +2,7 @@
 # Purpose: Controller script for login scene UI. Handles user input from
 # email and password fields, validates non-empty input, triggers API login
 # request, and routes to server_select, faction_select or lobby based on
-# profile state. Connects to API signals for async response handling.
+# profile state. Includes dev reset button for testing fresh flow.
 # Path: client/scripts/login/login.gd
 # All Rights Reserved. Arc-Pub.
 
@@ -12,18 +12,23 @@ extends Control
 @onready var password_input: LineEdit = $VBox/PasswordInput
 @onready var login_button: Button = $VBox/LoginButton
 @onready var status_label: Label = $VBox/StatusLabel
+@onready var reset_button: Button = $VBox/ResetButton
 
 
 func _ready() -> void:
 	login_button.pressed.connect(_on_login_pressed)
+	reset_button.pressed.connect(_on_reset_pressed)
+	reset_button.visible = Config.DEV_MODE
 	API.login_success.connect(_on_login_success)
 	API.login_failed.connect(_on_login_failed)
 	API.profile_loaded.connect(_on_profile_loaded)
 	API.profile_failed.connect(_on_profile_failed)
+	API.reset_done.connect(_on_reset_done)
 	
-	# Dev defaults
-	email_input.text = "admin@dev.local"
-	password_input.text = "admin123"
+	# Dev defaults (only in dev mode)
+	if Config.DEV_MODE:
+		email_input.text = "admin@dev.local"
+		password_input.text = "admin123"
 
 
 func _on_login_pressed() -> void:
@@ -64,6 +69,16 @@ func _on_profile_loaded(profile: Dictionary) -> void:
 
 func _on_profile_failed(_error: String) -> void:
 	get_tree().change_scene_to_file("res://scenes/server_select/server_select.tscn")
+
+
+func _on_reset_pressed() -> void:
+	status_label.text = "Resetting... (login first)"
+	API.reset_progress()
+
+
+func _on_reset_done() -> void:
+	status_label.text = "Progress reset! Login again."
+	login_button.disabled = false
 
 
 func _get_user_id_from_token(token: String) -> String:

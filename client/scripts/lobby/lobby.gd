@@ -1,8 +1,8 @@
 # File: lobby.gd
 # Purpose: Controller for lobby screen shown to users with a faction. Displays
 # current ship in slot 1 and 4 empty slots for additional ships. Ship display
-# shows type, slot number, and faction-styled background. Fetches profile data
-# on load to populate ship list. Entry point post-login for returning users.
+# shows type, slot number, and faction-styled background. Includes dev reset
+# button to restart onboarding flow for testing.
 # Path: client/scripts/lobby/lobby.gd
 # All Rights Reserved. Arc-Pub.
 
@@ -11,6 +11,7 @@ extends Control
 @onready var faction_label: Label = $VBox/FactionLabel
 @onready var ship_container: HBoxContainer = $VBox/ShipContainer
 @onready var status_label: Label = $VBox/StatusLabel
+@onready var reset_button: Button = $VBox/ResetButton
 
 const FACTION_COLORS: Dictionary = {
 	"red": Color(0.8, 0.2, 0.2),
@@ -22,6 +23,9 @@ const FACTION_COLORS: Dictionary = {
 func _ready() -> void:
 	API.profile_loaded.connect(_on_profile_loaded)
 	API.profile_failed.connect(_on_profile_failed)
+	API.reset_done.connect(_on_reset_done)
+	reset_button.pressed.connect(_on_reset_pressed)
+	reset_button.visible = Config.DEV_MODE
 	API.get_profile()
 	status_label.text = "Loading..."
 
@@ -39,6 +43,16 @@ func _on_profile_loaded(profile: Dictionary) -> void:
 
 func _on_profile_failed(error: String) -> void:
 	status_label.text = "Error: " + error
+
+
+func _on_reset_pressed() -> void:
+	status_label.text = "Resetting progress..."
+	reset_button.disabled = true
+	API.reset_progress()
+
+
+func _on_reset_done() -> void:
+	get_tree().change_scene_to_file("res://scenes/login/login.tscn")
 
 
 func _display_ships(ships: Array) -> void:

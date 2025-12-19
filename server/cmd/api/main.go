@@ -20,6 +20,7 @@ import (
 	"github.com/arc-pub/server/internal/infra/crypto"
 	httpPkg "github.com/arc-pub/server/internal/infra/http"
 	authHandler "github.com/arc-pub/server/internal/infra/http/auth"
+	devHandler "github.com/arc-pub/server/internal/infra/http/dev"
 	serverHandler "github.com/arc-pub/server/internal/infra/http/server"
 	userHandler "github.com/arc-pub/server/internal/infra/http/user"
 	"github.com/arc-pub/server/internal/infra/postgres"
@@ -77,8 +78,9 @@ func main() {
 	authH := authHandler.NewHandler(loginUC)
 	userH := userHandler.NewHandler(profileUC, factionUC)
 	serverH := serverHandler.NewHandler(listServersUC, selectServerUC)
+	devH := devHandler.NewHandler(pool)
 
-	router := httpPkg.NewRouter(authH, userH, serverH)
+	router := httpPkg.NewRouter(authH, userH, serverH, devH)
 
 	addr := ":" + cfg.Port
 	log.Printf("Server starting on %s", addr)
