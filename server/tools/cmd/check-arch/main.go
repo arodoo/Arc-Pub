@@ -1,8 +1,6 @@
 // File: main.go
-// Purpose: Entry point for check-arch quality tool. Validates architectural
-// layer boundaries by detecting forbidden imports in cmd layer. Ensures
-// proper dependency direction per hexagonal architecture. Exits with code 1
-// if violations found. Part of automated architecture quality gates.
+// Purpose: Entry point for check-arch quality tool. Validates architecture
+// layering rules. Exits with code 1 if violations found.
 // Path: server/tools/cmd/check-arch/main.go
 // All Rights Reserved. Arc-Pub.
 
@@ -11,7 +9,7 @@ package main
 import (
 	"os"
 
-	"github.com/arc-pub/server/tools/checkers"
+	"github.com/arc-pub/server/tools/checkers/sync"
 	"github.com/arc-pub/server/tools/reporters"
 	"github.com/arc-pub/server/tools/scanners"
 )
@@ -24,7 +22,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	checker := checkers.NewArch()
+	checker := sync.NewArch()
 	violations := checker.Check(files)
 
 	reporter := reporters.NewConsole()

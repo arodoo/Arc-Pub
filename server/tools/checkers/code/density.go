@@ -8,7 +8,7 @@
 // Path: server/tools/checkers/density.go
 // All Rights Reserved. Arc-Pub.
 
-package checkers
+package code
 
 import (
 	"fmt"

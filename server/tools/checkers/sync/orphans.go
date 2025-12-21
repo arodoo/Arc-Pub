@@ -8,7 +8,7 @@
 // Path: server/tools/checkers/orphans.go
 // All Rights Reserved. Arc-Pub.
 
-package checkers
+package sync
 
 import (
 	"os"

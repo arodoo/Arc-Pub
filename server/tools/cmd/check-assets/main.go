@@ -1,8 +1,6 @@
 // File: main.go
-// Purpose: Entry point for check-assets quality tool. Scans Godot project for
-// image and audio assets exceeding 2MB size limit. Large assets impact game
-// loading times and repository size. Exits with code 1 if violations found.
-// Part of automated asset management quality gates.
+// Purpose: Entry point for check-assets tool. Validates asset file sizes.
+// Uses modular architecture. Exits with code 1 if violations found.
 // Path: server/tools/cmd/check-assets/main.go
 // All Rights Reserved. Arc-Pub.
 
@@ -12,15 +10,18 @@ import (
 	"flag"
 	"os"
 
-	"github.com/arc-pub/server/tools/checkers"
+	"github.com/arc-pub/server/tools/checkers/godot"
 	"github.com/arc-pub/server/tools/reporters"
 )
 
 func main() {
-	root := flag.String("root", "..", "Godot project root")
 	flag.Parse()
+	root := "."
+	if flag.NArg() > 0 {
+		root = flag.Arg(0)
+	}
 
-	checker := checkers.NewAssets(*root)
+	checker := godot.NewAssets(root)
 	violations := checker.Check(nil)
 
 	reporter := reporters.NewConsole()

@@ -6,7 +6,7 @@
 // Path: server/tools/checkers/headers.go
 // All Rights Reserved. Arc-Pub.
 
-package checkers
+package code
 
 import (
 	"regexp"

@@ -1,8 +1,6 @@
 // File: main.go
-// Purpose: Entry point for check-orphans quality tool. Detects unreferenced
-// GDScript and PNG files not used by any scene. Helps identify dead code and
-// unused assets for cleanup. Exits with code 1 if violations found. Part of
-// automated project hygiene quality gates.
+// Purpose: Entry point for check-orphans tool. Finds unused files.
+// Uses modular architecture. Exits with code 1 if violations found.
 // Path: server/tools/cmd/check-orphans/main.go
 // All Rights Reserved. Arc-Pub.
 
@@ -12,23 +10,26 @@ import (
 	"flag"
 	"os"
 
-	"github.com/arc-pub/server/tools/checkers"
+	"github.com/arc-pub/server/tools/checkers/sync"
 	"github.com/arc-pub/server/tools/reporters"
 	"github.com/arc-pub/server/tools/scanners"
 )
 
 func main() {
-	root := flag.String("root", "..", "Godot project root")
 	flag.Parse()
+	root := "."
+	if flag.NArg() > 0 {
+		root = flag.Arg(0)
+	}
 
 	scanner := scanners.NewFileScanner()
-	files, err := scanner.Scan(*root, []string{".tscn"})
+	files, err := scanner.Scan(root, []string{".tscn"})
 	if err != nil {
 		os.Stderr.WriteString("scan error: " + err.Error() + "\n")
 		os.Exit(1)
 	}
 
-	checker := checkers.NewOrphans(*root)
+	checker := sync.NewOrphans(root)
 	violations := checker.Check(files)
 
 	reporter := reporters.NewConsole()

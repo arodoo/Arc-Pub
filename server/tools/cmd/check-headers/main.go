@@ -1,8 +1,6 @@
 // File: main.go
-// Purpose: Entry point for check-headers quality tool. Validates all Go and
-// GDScript files have proper headers with File, Purpose (100+ chars), Path,
-// and All Rights Reserved fields. Skips generated files. Exits with code 1
-// if violations found. Part of automated documentation quality gates.
+// Purpose: Entry point for check-headers quality tool. Validates file headers.
+// Uses modular architecture. Exits with code 1 if violations found.
 // Path: server/tools/cmd/check-headers/main.go
 // All Rights Reserved. Arc-Pub.
 
@@ -11,7 +9,7 @@ package main
 import (
 	"os"
 
-	"github.com/arc-pub/server/tools/checkers"
+	"github.com/arc-pub/server/tools/checkers/code"
 	"github.com/arc-pub/server/tools/reporters"
 	"github.com/arc-pub/server/tools/scanners"
 )
@@ -24,7 +22,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	checker := checkers.NewHeaders()
+	checker := code.NewHeaders()
 	violations := checker.Check(files)
 
 	reporter := reporters.NewConsole()

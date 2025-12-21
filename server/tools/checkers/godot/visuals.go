@@ -8,7 +8,7 @@
 // Path: server/tools/checkers/visuals.go
 // All Rights Reserved. Arc-Pub.
 
-package checkers
+package godot
 
 import (
 	"regexp"

@@ -1,8 +1,6 @@
 // File: main.go
-// Purpose: Entry point for check-sqlc quality tool. Verifies sqlc generated
-// code is synchronized with database schema source files. Compares file
-// timestamps to detect stale code. Exits with code 1 if regeneration needed.
-// Part of automated contract sync quality gates.
+// Purpose: Entry point for check-sqlc tool. Validates sqlc sync.
+// Uses modular architecture. Exits with code 1 if violations found.
 // Path: server/tools/cmd/check-sqlc/main.go
 // All Rights Reserved. Arc-Pub.
 
@@ -11,12 +9,12 @@ package main
 import (
 	"os"
 
-	"github.com/arc-pub/server/tools/checkers"
+	"github.com/arc-pub/server/tools/checkers/sync"
 	"github.com/arc-pub/server/tools/reporters"
 )
 
 func main() {
-	checker := checkers.NewSQLCSync(
+	checker := sync.NewSQLCSync(
 		"db/schema.sql",
 		"internal/infra/postgres/sqlc",
 	)

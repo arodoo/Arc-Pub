@@ -1,8 +1,6 @@
 // File: main.go
-// Purpose: Entry point for check-density quality tool. Scans directories and
-// validates folder file counts do not exceed 10 files per folder. Follows
-// cognitive load principles for navigable project structure. Exits with
-// code 1 if violations found. Part of automated quality gates.
+// Purpose: Entry point for check-density tool. Validates folder file counts.
+// Uses modular architecture. Exits with code 1 if violations found.
 // Path: server/tools/cmd/check-density/main.go
 // All Rights Reserved. Arc-Pub.
 
@@ -11,12 +9,12 @@ package main
 import (
 	"os"
 
-	"github.com/arc-pub/server/tools/checkers"
+	"github.com/arc-pub/server/tools/checkers/code"
 	"github.com/arc-pub/server/tools/reporters"
 )
 
 func main() {
-	checker := checkers.NewDensity(".")
+	checker := code.NewDensity(".")
 	violations := checker.Check(nil)
 
 	reporter := reporters.NewConsole()

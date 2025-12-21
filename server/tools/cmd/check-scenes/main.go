@@ -1,8 +1,6 @@
 // File: main.go
 // Purpose: Entry point for check-scenes quality tool. Validates Godot .tscn
-// files for broken external resource references. Parses ext_resource paths
-// and verifies referenced files exist. Exits with code 1 if violations found.
-// Part of automated scene integrity quality gates.
+// files for broken external resource references. Exits with code 1 if found.
 // Path: server/tools/cmd/check-scenes/main.go
 // All Rights Reserved. Arc-Pub.
 
@@ -12,7 +10,7 @@ import (
 	"flag"
 	"os"
 
-	"github.com/arc-pub/server/tools/checkers"
+	"github.com/arc-pub/server/tools/checkers/godot"
 	"github.com/arc-pub/server/tools/reporters"
 	"github.com/arc-pub/server/tools/scanners"
 )
@@ -28,7 +26,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	checker := checkers.NewScenes(*root)
+	checker := godot.NewScenes(*root)
 	violations := checker.Check(files)
 
 	reporter := reporters.NewConsole()
