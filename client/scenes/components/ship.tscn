@@ -1,13 +1,25 @@
-[gd_scene load_steps=3 format=3 uid="uid://cship00001"]
+[gd_scene load_steps=2 format=3 uid="uid://cship00001"]
 
 [ext_resource type="Script" path="res://scripts/components/ship.gd" id="1"]
-[ext_resource type="Shader" path="res://assets/shaders/faction_color.gdshader" id="2"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ship"]
-shader = ExtResource("2")
-shader_parameter/faction_color = Color(1, 1, 1, 1)
-shader_parameter/color_intensity = 0.8
-
-[node name="Ship" type="Sprite2D"]
-material = SubResource("ShaderMaterial_ship")
+[node name="Ship" type="Node2D"]
 script = ExtResource("1")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(256, 256)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 5, 0)
+projection = 1
+size = 3.0
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewport"]
+transform = Transform3D(0.866, -0.25, 0.433, 0, 0.866, 0.5, -0.5, -0.433, 0.75, 2, 3, 2)
+
+[node name="ModelContainer" type="Node3D" parent="SubViewport"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
